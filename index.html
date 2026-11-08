@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Peraga Interactive CP Fisik-Motorik PAUD</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+    /* Touch Smoothness */
+    .touch-action-none {
+      touch-action: none;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+  <!-- TOP HEADER -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center text-white shadow-md shadow-indigo-200">
+          <i data-lucide="activity" class="w-6 h-6"></i>
+        </div>
+        <div>
+          <h1 class="font-bold text-lg text-slate-900 leading-tight">Peraga CP Fisik-Motorik PAUD</h1>
+          <p class="text-xs text-slate-500 font-medium">Motorik Kasar • Motorik Halus • Taktil & Sensori Kemandirian</p>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <nav class="hidden md:flex space-x-1 bg-slate-100 p-1 rounded-xl">
+        <button onclick="switchTab('simulasi')" id="tab-btn-simulasi" class="tab-btn px-4 py-2 text-xs font-semibold rounded-lg transition-all bg-white text-indigo-700 shadow-sm">
+          <i data-lucide="play-circle" class="w-4 h-4 inline mr-1.5"></i>Simulasi Interaktif
+        </button>
+        <button onclick="switchTab('cp-explor')" id="tab-btn-cp-explor" class="tab-btn px-4 py-2 text-xs font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition-all">
+          <i data-lucide="book-open" class="w-4 h-4 inline mr-1.5"></i>Peta Indikator CP
+        </button>
+        <button onclick="switchTab('checklist')" id="tab-btn-checklist" class="tab-btn px-4 py-2 text-xs font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition-all">
+          <i data-lucide="check-square" class="w-4 h-4 inline mr-1.5"></i>Checklist Kemandirian
+        </button>
+      </nav>
+
+      <!-- Age Filter Header Widget -->
+      <div class="flex items-center space-x-2">
+        <span class="text-xs font-medium text-slate-500 hidden sm:inline">Usia Anak:</span>
+        <select id="ageFilterSelect" onchange="changeAgeGroup(this.value)" class="bg-slate-100 border border-slate-300 text-slate-700 text-xs rounded-lg focus:ring-indigo-500 focus:border-indigo-500 p-2 font-medium">
+          <option value="all">Semua Usia (2-6 Thn)</option>
+          <option value="2-3">Usia 2 - 3 Tahun</option>
+          <option value="3-4">Usia 3 - 4 Tahun</option>
+          <option value="4-5">Usia 4 - 5 Tahun</option>
+          <option value="5-6" selected>Usia 5 - 6 Tahun</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Mobile Nav Bar -->
+    <div class="flex md:hidden border-t border-slate-200 bg-white px-2 py-1.5 justify-around">
+      <button onclick="switchTab('simulasi')" id="mob-btn-simulasi" class="mob-tab-btn flex flex-col items-center py-1 text-xs font-medium text-indigo-600">
+        <i data-lucide="play-circle" class="w-5 h-5"></i>
+        <span class="text-[10px]">Simulasi</span>
+      </button>
+      <button onclick="switchTab('cp-explor')" id="mob-btn-cp-explor" class="mob-tab-btn flex flex-col items-center py-1 text-xs font-medium text-slate-500">
+        <i data-lucide="book-open" class="w-5 h-5"></i>
+        <span class="text-[10px]">Indikator</span>
+      </button>
+      <button onclick="switchTab('checklist')" id="mob-btn-checklist" class="mob-tab-btn flex flex-col items-center py-1 text-xs font-medium text-slate-500">
+        <i data-lucide="check-square" class="w-5 h-5"></i>
+        <span class="text-[10px]">Checklist</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
+
+    <!-- TAB 1: SIMULASI INTERAKTIF (PERAGA LAB) -->
+    <section id="sec-simulasi" class="tab-content space-y-6">
+      <!-- Top Overview Card -->
+      <div class="bg-gradient-to-r from-indigo-900 via-indigo-800 to-slate-900 rounded-2xl p-6 text-white shadow-xl relative overflow-hidden">
+        <div class="absolute -right-10 -bottom-10 w-48 h-48 bg-indigo-500/20 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="relative z-10 max-w-3xl">
+          <span class="inline-block px-3 py-1 bg-indigo-500/30 text-indigo-200 border border-indigo-400/30 rounded-full text-xs font-medium mb-3">
+            Simulasi Praktis Peraga Pembelajaran
+          </span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight">Eksplorasi Peragaan Fisik & Motorik Anak</h2>
+          <p class="mt-2 text-sm text-indigo-100/90 leading-relaxed">
+            Simulasi praktis ini dirancang untuk memperagakan 3 elemen utama fisik-motorik PAUD (**Motorik Kasar**, **Motorik Halus**, dan **Sensori Taktil**) yang langsung menunjang kemandirian anak dalam rutinitas sehari-hari.
+          </p>
+        </div>
+      </div>
+
+      <!-- SIMULATION GRID (3 CARDS) -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+        <!-- SIMULASI 1: MOTORIK KASAR -->
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
+          <div class="p-4 bg-emerald-50 border-b border-emerald-100 flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+              <span class="w-7 h-7 rounded-lg bg-emerald-600 text-white flex items-center justify-center text-xs font-bold">1</span>
+              <h3 class="font-bold text-slate-800 text-sm">Motorik Kasar: Meniti & Melompat</h3>
+            </div>
+            <span class="text-[11px] font-semibold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full">Keseimbangan</span>
+          </div>
+
+          <div class="p-4 flex-1 flex flex-col justify-between space-y-4">
+            <p class="text-xs text-slate-600">
+              Latih koordinasi tubuh dan keseimbangan anak dengan mengontrol langkah kaki di papan titian.
+            </p>
+
+            <!-- Interactive Canvas / Canvas Area -->
+            <div class="relative bg-slate-900 rounded-xl overflow-hidden h-48 flex items-center justify-center" id="kasar-container">
+              <canvas id="kasarCanvas" class="w-full h-full block cursor-pointer"></canvas>
+              <!-- Touch Overlay Notice -->
+              <div class="absolute top-2 left-2 text-[10px] bg-slate-800/80 text-emerald-400 px-2 py-1 rounded backdrop-blur">
+                Sentuh Kiri/Kanan atau Gunakan Tombol
+              </div>
+            </div>
+
+            <!-- Stats & Feedback -->
+            <div class="bg-slate-50 p-3 rounded-xl border border-slate-100 space-y-2">
+              <div class="flex justify-between items-center text-xs font-medium">
+                <span class="text-slate-500">Skor Keseimbangan:</span>
+                <span id="kasarScore" class="font-bold text-emerald-600">0 Step</span>
+              </div>
+              <div class="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
+                <div id="kasarProgressBar" class="bg-emerald-500 h-2 rounded-full w-0 transition-all duration-300"></div>
+              </div>
+              <p id="kasarFeedback" class="text-[11px] text-slate-500 italic">Klik pada canvas untuk mulai melangkah!</p>
+            </div>
+
+            <!-- Controls -->
+            <div class="grid grid-cols-2 gap-2">
+              <button onclick="stepKasar('left')" class="px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs rounded-xl shadow-sm transition active:scale-95 flex items-center justify-center">
+                <i data-lucide="arrow-left" class="w-4 h-4 mr-1"></i> Langkah Kiri
+              </button>
+              <button onclick="stepKasar('right')" class="px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs rounded-xl shadow-sm transition active:scale-95 flex items-center justify-center">
+                Langkah Kanan <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- SIMULASI 2: MOTORIK HALUS -->
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
+          <div class="p-4 bg-sky-50 border-b border-sky-100 flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+              <span class="w-7 h-7 rounded-lg bg-sky-600 text-white flex items-center justify-center text-xs font-bold">2</span>
+              <h3 class="font-bold text-slate-800 text-sm">Motorik Halus: Mengancingkan Baju</h3>
+            </div>
+            <span class="text-[11px] font-semibold bg-sky-100 text-sky-800 px-2 py-0.5 rounded-full">Manipulasi Jari</span>
+          </div>
+
+          <div class="p-4 flex-1 flex flex-col justify-between space-y-4">
+            <p class="text-xs text-slate-600">
+              Gerakkan kancing baju (drag / geser) tepat masuk ke lubang kancing untuk melatih kemandirian berpakaian.
+            </p>
+
+            <!-- Interactive Area -->
+            <div class="relative bg-sky-900 rounded-xl overflow-hidden h-48 flex items-center justify-center" id="halus-container">
+              <canvas id="halusCanvas" class="w-full h-full block cursor-grab active:cursor-grabbing"></canvas>
+              <div class="absolute top-2 left-2 text-[10px] bg-slate-800/80 text-sky-300 px-2 py-1 rounded backdrop-blur">
+                Tarik Kancing ke Lubang Kancing
+              </div>
+            </div>
+
+            <!-- Stats & Feedback -->
+            <div class="bg-slate-50 p-3 rounded-xl border border-slate-100 space-y-2">
+              <div class="flex justify-between items-center text-xs font-medium">
+                <span class="text-slate-500">Kancing Terpasang:</span>
+                <span id="halusScore" class="font-bold text-sky-600">0 / 3</span>
+              </div>
+              <div class="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
+                <div id="halusProgressBar" class="bg-sky-500 h-2 rounded-full w-0 transition-all duration-300"></div>
+              </div>
+              <p id="halusFeedback" class="text-[11px] text-slate-500 italic">Geser kancing berwarna ke lingkaran sasaran.</p>
+            </div>
+
+            <!-- Action Reset Button -->
+            <button onclick="resetHalusSim()" class="w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-xl transition flex items-center justify-center">
+              <i data-lucide="rotate-ccw" class="w-3.5 h-3.5 mr-1.5"></i> Ulangi Kancing Baju
+            </button>
+          </div>
+        </div>
+
+        <!-- SIMULASI 3: PERABAN & TAKTIL -->
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
+          <div class="p-4 bg-amber-50 border-b border-amber-100 flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+              <span class="w-7 h-7 rounded-lg bg-amber-600 text-white flex items-center justify-center text-xs font-bold">3</span>
+              <h3 class="font-bold text-slate-800 text-sm">Taktil: Kotak Peraba Misteri</h3>
+            </div>
+            <span class="text-[11px] font-semibold bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full">Diskriminasi Indera</span>
+          </div>
+
+          <div class="p-4 flex-1 flex flex-col justify-between space-y-4">
+            <p class="text-xs text-slate-600">
+              Rasakan tekstur benda dalam "Kotak Misteri" untuk menguji sensitivitas indera peraba anak.
+            </p>
+
+            <!-- Mystery Box Interactive Container -->
+            <div class="bg-amber-950 rounded-xl p-4 h-48 flex flex-col items-center justify-center text-center relative overflow-hidden shadow-inner">
+              <div id="taktilDisplay" class="z-10 transition-all duration-300">
+                <div class="w-16 h-16 rounded-2xl bg-amber-800/80 border-2 border-dashed border-amber-400/50 flex items-center justify-center mx-auto mb-2 text-amber-200">
+                  <i data-lucide="help-circle" class="w-8 h-8 animate-bounce"></i>
+                </div>
+                <p class="text-xs text-amber-200 font-medium">Tekan tombol Raba untuk merasakan tekstur</p>
+              </div>
+            </div>
+
+            <!-- Controls & Options -->
+            <div class="bg-slate-50 p-3 rounded-xl border border-slate-100 space-y-2">
+              <span class="text-xs font-semibold text-slate-700 block">Tebak Tekstur Benda:</span>
+              <div class="grid grid-cols-2 gap-1.5" id="taktilOptions">
+                <button onclick="guessTaktil('Kasar')" class="taktil-btn py-1.5 bg-white hover:bg-amber-50 border border-slate-200 text-slate-700 text-xs rounded-lg font-medium transition">
+                  🪨 Kasar (Batu/Ampelas)
+                </button>
+                <button onclick="guessTaktil('Halus/Kapas')" class="taktil-btn py-1.5 bg-white hover:bg-amber-50 border border-slate-200 text-slate-700 text-xs rounded-lg font-medium transition">
+                  ☁️ Halus (Kapas/Sutra)
+                </button>
+                <button onclick="guessTaktil('Lengket')" class="taktil-btn py-1.5 bg-white hover:bg-amber-50 border border-slate-200 text-slate-700 text-xs rounded-lg font-medium transition">
+                  🍯 Lengket (Slime/Madu)
+                </button>
+                <button onclick="guessTaktil('Bergerigi')" class="taktil-btn py-1.5 bg-white hover:bg-amber-50 border border-slate-200 text-slate-700 text-xs rounded-lg font-medium transition">
+                  ⚙️ Bergerigi (Roda Gigi)
+                </button>
+              </div>
+              <p id="taktilFeedback" class="text-[11px] text-slate-500 italic mt-1">Acak benda untuk memulai.</p>
+            </div>
+
+            <!-- Action Button -->
+            <button onclick="generateRandomTaktil()" class="w-full py-2 bg-amber-600 hover:bg-amber-700 text-white font-semibold text-xs rounded-xl transition shadow-sm flex items-center justify-center">
+              <i data-lucide="hand" class="w-4 h-4 mr-1.5"></i> Raba Benda Baru
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- KONEKSI KEMANDIRIAN HARIAN -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+        <h3 class="font-bold text-slate-800 text-base mb-4 flex items-center">
+          <i data-lucide="sparkles" class="w-5 h-5 text-indigo-600 mr-2"></i>
+          Penerapan Integratif dalam Kemandirian Anak Sehari-Hari
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="p-4 rounded-xl bg-slate-50 border border-slate-100 hover:border-emerald-200 transition">
+            <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-sm mb-2">1</div>
+            <h4 class="font-semibold text-slate-800 text-sm">Makan & Minum Mandiri</h4>
+            <p class="text-xs text-slate-600 mt-1">
+              **Motorik Halus** memegang sendok/garpu, **Taktil** membedakan rasa hangat/dingin gelas, & **Motorik Kasar** mempertahankan posisi duduk tegak.
+            </p>
+          </div>
+          <div class="p-4 rounded-xl bg-slate-50 border border-slate-100 hover:border-sky-200 transition">
+            <div class="w-8 h-8 rounded-lg bg-sky-100 text-sky-700 flex items-center justify-center font-bold text-sm mb-2">2</div>
+            <h4 class="font-semibold text-slate-800 text-sm">Bina Diri & Berpakaian</h4>
+            <p class="text-xs text-slate-600 mt-1">
+              Mengancingkan baju, memakai kaus kaki/sepatu berperekat, serta menarik resleting celana secara cepat dan tepat.
+            </p>
+          </div>
+          <div class="p-4 rounded-xl bg-slate-50 border border-slate-100 hover:border-amber-200 transition">
+            <div class="w-8 h-8 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center font-bold text-sm mb-2">3</div>
+            <h4 class="font-semibold text-slate-800 text-sm">Toilet Training & Kebersihan</h4>
+            <p class="text-xs text-slate-600 mt-1">
+              Mengatur keseimbangan saat jongkok, membuka keran air, dan mengeringkan tangan memakai serbet/tisu dengan persepsi taktil.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 2: PETA INDIKATOR CAPAIAN PEMBELAJARAN (CP) -->
+    <section id="sec-cp-explor" class="tab-content hidden space-y-6">
+      <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+          <div>
+            <h2 class="text-xl font-bold text-slate-900">Peta Indikator Capaian Pembelajaran</h2>
+            <p class="text-xs text-slate-500 mt-1">Breakdown indikator perkembangan motorik kasar, halus, dan taktil sesuai kelompok usia.</p>
+          </div>
+
+          <!-- Domain Filter Buttons -->
+          <div class="flex flex-wrap gap-2">
+            <button onclick="filterDomain('all')" class="domain-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600 text-white shadow-sm" id="domain-all">Semua Domain</button>
+            <button onclick="filterDomain('kasar')" class="domain-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-600 hover:bg-slate-200" id="domain-kasar">Motorik Kasar</button>
+            <button onclick="filterDomain('halus')" class="domain-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-600 hover:bg-slate-200" id="domain-halus">Motorik Halus</button>
+            <button onclick="filterDomain('taktil')" class="domain-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-600 hover:bg-slate-200" id="domain-taktil">Taktil & Sensori</button>
+          </div>
+        </div>
+
+        <!-- Cards Container -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="cpCardsContainer">
+          <!-- Will be rendered dynamically via JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: CHECKLIST KEMANDIRIAN SEHARI-HARI -->
+    <section id="sec-checklist" class="tab-content hidden space-y-6">
+      <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-100 pb-4 mb-6">
+          <div>
+            <h2 class="text-xl font-bold text-slate-900">Checklist Evaluasi Kemandirian Anak</h2>
+            <p class="text-xs text-slate-500">Pantau perkembangan kemampuan fisik-motorik anak dalam rutinitas harian.</p>
+          </div>
+          <div class="flex items-center space-x-2">
+            <button onclick="resetChecklist()" class="text-xs font-medium text-slate-500 hover:text-slate-800 px-3 py-1.5 rounded-lg border border-slate-200">
+              Reset Checklist
+            </button>
+            <button onclick="printChecklist()" class="text-xs font-semibold bg-indigo-600 text-white px-3 py-1.5 rounded-lg shadow-sm hover:bg-indigo-700 flex items-center">
+              <i data-lucide="printer" class="w-3.5 h-3.5 mr-1"></i> Cetak / Simpan
+            </button>
+          </div>
+        </div>
+
+        <!-- Progress Summary Bar -->
+        <div class="bg-slate-50 rounded-xl p-4 border border-slate-100 mb-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div class="w-full sm:w-2/3">
+            <div class="flex justify-between items-center mb-1">
+              <span class="text-xs font-semibold text-slate-700">Tingkat Kemandirian Terperhatikan</span>
+              <span id="checklistPercentage" class="text-xs font-bold text-indigo-600">0%</span>
+            </div>
+            <div class="w-full bg-slate-200 rounded-full h-3 overflow-hidden">
+              <div id="checklistProgressBar" class="bg-indigo-600 h-3 rounded-full w-0 transition-all duration-300"></div>
+            </div>
+          </div>
+          <div class="text-right w-full sm:w-auto">
+            <span id="checklistCounter" class="text-xs font-medium text-slate-500">0 dari 0 tugas selesai</span>
+          </div>
+        </div>
+
+        <!-- Checklist Items List -->
+        <div class="space-y-3" id="checklistContainer">
+          <!-- Rendered via JS -->
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-white border-t border-slate-200 py-4 mt-auto">
+    <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-500">
+      Aplikasi Peraga Capaian Pembelajaran (CP) Fisik-Motorik PAUD • Dirancang untuk Pendidik & Orang Tua
+    </div>
+  </footer>
+
+  <!-- JAVASCRIPT LOGIC -->
+  <script>
+    // --- DATA & STATE ---
+    let currentAgeGroup = '5-6';
+    let currentDomainFilter = 'all';
+
+    const cpData = [
+      // Motorik Kasar
+      {
+        id: 'mk-1',
+        domain: 'kasar',
+        title: 'Keseimbangan & Meniti',
+        age: ['2-3', '3-4', '4-5', '5-6'],
+        desc: 'Kemampuan berjalan pada garis lurus, meniti papan keseimbangan, dan berdiri dengan satu kaki.',
+        dailyApp: 'Memanjat tangga rumah/sekolah, menyeberang selokan kecil dengan aman.',
+        icon: 'footprints',
+        color: 'emerald'
+      },
+      {
+        id: 'mk-2',
+        domain: 'kasar',
+        title: 'Koordinasi Mata-Tangan-Kaki',
+        age: ['3-4', '4-5', '5-6'],
+        desc: 'Melempar, menangkap, menendang bola besar/kecil dengan akurasi yang memadai.',
+        dailyApp: 'Bermain lempar tangkap mainan, menendang bola ke sasaran tanpa oleng.',
+        icon: 'circle-dot',
+        color: 'emerald'
+      },
+      {
+        id: 'mk-3',
+        domain: 'kasar',
+        title: 'Navigasi Spasial & Kelincahan',
+        age: ['4-5', '5-6'],
+        desc: 'Melompat dengan dua/satu kaki, berlari menghindari rintangan, naik-turun tangga bergantian.',
+        dailyApp: 'Bisa bergerak lincah di area bermain tanpa bertabrakan dengan teman.',
+        icon: 'zap',
+        color: 'emerald'
+      },
+
+      // Motorik Halus
+      {
+        id: 'mh-1',
+        domain: 'halus',
+        title: 'Kemandirian Berpakaian (Bina Diri)',
+        age: ['3-4', '4-5', '5-6'],
+        desc: 'Mengancingkan baju, menarik resleting, memakai dan melepas sepatu berperekat.',
+        dailyApp: 'Mampu memakai seragam dan sepatu sendiri sebelum berangkat ke sekolah.',
+        icon: 'shirt',
+        color: 'sky'
+      },
+      {
+        id: 'mh-2',
+        domain: 'halus',
+        title: 'Manipulasi Objek & Alat',
+        age: ['2-3', '3-4', '4-5', '5-6'],
+        desc: 'Memegang sendok/garpu, membuka tutup botol/kotak makan, memutar kran air.',
+        dailyApp: 'Makan dan minum sendiri tanpa banyak tumpah serta membuka bekal makanan.',
+        icon: 'utensils',
+        color: 'sky'
+      },
+      {
+        id: 'mh-3',
+        domain: 'halus',
+        title: 'Pra-Menulis & Kreativitas',
+        age: ['4-5', '5-6'],
+        desc: 'Menggunakan genggaman tripod pada pensil, menggunting mengikuti garis, meronce.',
+        dailyApp: 'Menulis nama sederhana, menggunting bentuk mainan, dan melipat kertas.',
+        icon: 'scissors',
+        color: 'sky'
+      },
+
+      // Taktil
+      {
+        id: 'tk-1',
+        domain: 'taktil',
+        title: 'Eksplorasi Keanekaragaman Tekstur',
+        age: ['2-3', '3-4', '4-5', '5-6'],
+        desc: 'Mengenali dan bersiap menyentuh berbagai tekstur (halus, kasar, basah, lengket, lembut).',
+        dailyApp: 'Tidak takut atau jijik berlebih saat memegang nasi, buah, pasir, atau tanah.',
+        icon: 'hand',
+        color: 'amber'
+      },
+      {
+        id: 'tk-2',
+        domain: 'taktil',
+        title: 'Diskriminasi Perabaan (Stereognosis)',
+        age: ['3-4', '4-5', '5-6'],
+        desc: 'Membedakan bentuk, ukuran, dan sensasi suhu tanpa harus melihat langsung benda tersebut.',
+        dailyApp: 'Mengambil barang dari dalam tas sekolah hanya dengan meraba.',
+        icon: 'box',
+        color: 'amber'
+      },
+      {
+        id: 'tk-3',
+        domain: 'taktil',
+        title: 'Modulasi Kekuatan Sentuhan',
+        age: ['4-5', '5-6'],
+        desc: 'Menyesuaikan besarnya tekanan saat memegang objek rapuh (misal: telur, gelas kaca, kertas).',
+        dailyApp: 'Memegang gelas kaca atau buah pisang tanpa merusaknya/membuatnya hancur.',
+        icon: 'shield-alert',
+        color: 'amber'
+      }
+    ];
+
+    const checklistData = [
+      { id: 'c1', text: 'Mampu memakai dan melepas sepatu berperekat sendiri', domain: 'halus' },
+      { id: 'c2', text: 'Bisa mengancingkan kancing baju berukuran sedang secara mandiri', domain: 'halus' },
+      { id: 'c3', text: 'Mampu berjalan meniti di papan lurus tanpa terjatuh', domain: 'kasar' },
+      { id: 'c4', text: 'Mampu memegang sendok dan makan sendiri dengan rapi', domain: 'halus' },
+      { id: 'c5', text: 'Membuka dan menutup tempat makan/botol minum sendiri', domain: 'halus' },
+      { id: 'c6', text: 'Mau dan nyaman menyentuh benda basah/lengket (misal: adonan, pasir basah)', domain: 'taktil' },
+      { id: 'c7', text: 'Mampu menaik-turunkan tangga tanpa perlu dipegangi', domain: 'kasar' },
+      { id: 'c8', text: 'Dapat membedakan benda kasar dan halus hanya dengan meraba', domain: 'taktil' },
+      { id: 'c9', text: 'Bisa memotong kertas menggunakan gunting anak mengikuti garis', domain: 'halus' },
+      { id: 'c10', text: 'Mampu melompat dengan dua kaki mendarat secara seimbang', domain: 'kasar' }
+    ];
+
+    let userChecklistState = {};
+
+    // --- TAB SWITCHING ---
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      document.getElementById(`sec-${tabId}`).classList.remove('hidden');
+
+      // Update Desktop Buttons
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('bg-white', 'text-indigo-700', 'shadow-sm');
+        btn.classList.add('text-slate-600');
+      });
+      const activeBtn = document.getElementById(`tab-btn-${tabId}`);
+      if(activeBtn) {
+        activeBtn.classList.add('bg-white', 'text-indigo-700', 'shadow-sm');
+        activeBtn.classList.remove('text-slate-600');
+      }
+
+      // Update Mobile Buttons
+      document.querySelectorAll('.mob-tab-btn').forEach(btn => {
+        btn.classList.remove('text-indigo-600');
+        btn.classList.add('text-slate-500');
+      });
+      const mobBtn = document.getElementById(`mob-btn-${tabId}`);
+      if(mobBtn) {
+        mobBtn.classList.add('text-indigo-600');
+        mobBtn.classList.remove('text-slate-500');
+      }
+
+      // Resize canvases if in simulasi tab
+      if (tabId === 'simulasi') {
+        setTimeout(() => {
+          resizeCanvases();
+        }, 50);
+      }
+    }
+
+    // --- AGE GROUP FILTER ---
+    function changeAgeGroup(age) {
+      currentAgeGroup = age;
+      renderCPCards();
+    }
+
+    // --- DOMAIN FILTER ---
+    function filterDomain(domain) {
+      currentDomainFilter = domain;
+      document.querySelectorAll('.domain-btn').forEach(b => {
+        b.classList.remove('bg-indigo-600', 'text-white', 'shadow-sm');
+        b.classList.add('bg-slate-100', 'text-slate-600');
+      });
+      const btn = document.getElementById(`domain-${domain}`);
+      if (btn) {
+        btn.classList.add('bg-indigo-600', 'text-white', 'shadow-sm');
+        btn.classList.remove('bg-slate-100', 'text-slate-600');
+      }
+      renderCPCards();
+    }
+
+    // --- RENDER CP CARDS ---
+    function renderCPCards() {
+      const container = document.getElementById('cpCardsContainer');
+      container.innerHTML = '';
+
+      const filtered = cpData.filter(item => {
+        const matchesDomain = currentDomainFilter === 'all' || item.domain === currentDomainFilter;
+        const matchesAge = currentAgeGroup === 'all' || item.age.includes(currentAgeGroup);
+        return matchesDomain && matchesAge;
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full py-12 text-center text-slate-400">
+            <i data-lucide="info" class="w-8 h-8 mx-auto mb-2 opacity-50"></i>
+            <p class="text-xs">Tidak ada indikator yang cocok dengan filter usia/domain ini.</p>
+          </div>
+        `;
+        lucide.createIcons();
+        return;
+      }
+
+      filtered.forEach(item => {
+        let badgeBg = 'bg-emerald-100 text-emerald-800 border-emerald-200';
+        if (item.domain === 'halus') badgeBg = 'bg-sky-100 text-sky-800 border-sky-200';
+        if (item.domain === 'taktil') badgeBg = 'bg-amber-100 text-amber-800 border-amber-200';
+
+        const card = document.createElement('div');
+        card.className = 'bg-slate-50 rounded-xl p-4 border border-slate-200 hover:border-slate-300 transition flex flex-col justify-between';
+        card.innerHTML = `
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full border ${badgeBg}">
+                ${item.domain.toUpperCase()}
+              </span>
+              <span class="text-[11px] font-semibold text-slate-400">Target: ${item.age.join(', ')} Thn</span>
+            </div>
+            <h4 class="font-bold text-slate-800 text-sm mb-1 flex items-center">
+              <i data-lucide="${item.icon}" class="w-4 h-4 mr-1.5 text-slate-600"></i>
+              ${item.title}
+            </h4>
+            <p class="text-xs text-slate-600 leading-relaxed mb-3">${item.desc}</p>
+          </div>
+          <div class="pt-3 border-t border-slate-200/60">
+            <span class="text-[10px] font-semibold text-slate-500 uppercase block mb-1">Aplikasi Kemandirian:</span>
+            <p class="text-xs font-medium text-slate-700 bg-white p-2 rounded-lg border border-slate-100">${item.dailyApp}</p>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+
+      lucide.createIcons();
+    }
+
+    // --- CHECKLIST SYSTEM ---
+    function renderChecklist() {
+      const container = document.getElementById('checklistContainer');
+      container.innerHTML = '';
+
+      checklistData.forEach(item => {
+        const isChecked = !!userChecklistState[item.id];
+        const row = document.createElement('div');
+        row.className = `p-3.5 rounded-xl border transition flex items-center justify-between ${isChecked ? 'bg-indigo-50/50 border-indigo-200' : 'bg-slate-50 border-slate-200 hover:border-slate-300'}`;
+        
+        let tagColor = 'bg-emerald-100 text-emerald-800';
+        if(item.domain === 'halus') tagColor = 'bg-sky-100 text-sky-800';
+        if(item.domain === 'taktil') tagColor = 'bg-amber-100 text-amber-800';
+
+        row.innerHTML = `
+          <label class="flex items-center space-x-3 cursor-pointer flex-1">
+            <input type="checkbox" onchange="toggleChecklist('${item.id}')" ${isChecked ? 'checked' : ''} class="w-4 h-4 text-indigo-600 rounded focus:ring-indigo-500 border-slate-300">
+            <span class="text-xs font-medium ${isChecked ? 'line-through text-slate-400' : 'text-slate-700'}">${item.text}</span>
+          </label>
+          <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full ${tagColor} ml-2">
+            ${item.domain}
+          </span>
+        `;
+        container.appendChild(row);
+      });
+
+      updateChecklistProgress();
+    }
+
+    function toggleChecklist(id) {
+      userChecklistState[id] = !userChecklistState[id];
+      renderChecklist();
+    }
+
+    function updateChecklistProgress() {
+      const total = checklistData.length;
+      const completed = Object.values(userChecklistState).filter(Boolean).length;
+      const pct = Math.round((completed / total) * 100);
+
+      document.getElementById('checklistPercentage').textContent = `${pct}%`;
+      document.getElementById('checklistProgressBar').style.width = `${pct}%`;
+      document.getElementById('checklistCounter').textContent = `${completed} dari ${total} indikator teramati`;
+    }
+
+    function resetChecklist() {
+      userChecklistState = {};
+      renderChecklist();
+    }
+
+    function printChecklist() {
+      window.print();
+    }
+
+    // --- CANVAS SIMULATION 1: MOTORIK KASAR (TITIAN KESEIMBANGAN) ---
+    let kasarCanvas, kasarCtx;
+    let kasarPosition = 0; // 0 to 100
+    let kasarTargetStep = 'left';
+    let kasarScoreCount = 0;
+
+    function initKasarSim() {
+      kasarCanvas = document.getElementById('kasarCanvas');
+      if (!kasarCanvas) return;
+      kasarCtx = kasarCanvas.getContext('2d');
+      drawKasar();
+    }
+
+    function stepKasar(side) {
+      if (side === kasarTargetStep) {
+        kasarPosition += 10;
+        kasarScoreCount += 1;
+        kasarTargetStep = (kasarTargetStep === 'left') ? 'right' : 'left';
+        
+        if (kasarPosition >= 100) {
+          document.getElementById('kasarFeedback').textContent = '🎉 Luar biasa! Anak berhasil meniti hingga ujung dengan seimbang!';
+          kasarPosition = 0;
+        } else {
+          document.getElementById('kasarFeedback').textContent = `Bagus! Langkah berikutnya: ${kasarTargetStep === 'left' ? 'Kaki Kiri' : 'Kaki Kanan'}`;
+        }
+      } else {
+        document.getElementById('kasarFeedback').textContent = '⚠️ Hati-hati! Kaki tertukar. Jaga keseimbangan!';
+      }
+
+      document.getElementById('kasarScore').textContent = `${kasarScoreCount} Langkah`;
+      document.getElementById('kasarProgressBar').style.width = `${(kasarPosition / 100) * 100}%`;
+      drawKasar();
+    }
+
+    function drawKasar() {
+      if (!kasarCanvas || !kasarCtx) return;
+      const w = kasarCanvas.width;
+      const h = kasarCanvas.height;
+
+      kasarCtx.clearRect(0, 0, w, h);
+
+      // Background
+      kasarCtx.fillStyle = '#0f172a';
+      kasarCtx.fillRect(0, 0, w, h);
+
+      // Draw Wooden Beam (Papan Titian)
+      const beamY = h / 2 + 10;
+      kasarCtx.fillStyle = '#b45309';
+      kasarCtx.fillRect(30, beamY, w - 60, 16);
+
+      // Beam markings
+      kasarCtx.fillStyle = '#d97706';
+      for(let x = 40; x < w - 60; x += 30) {
+        kasarCtx.fillRect(x, beamY, 2, 16);
+      }
+
+      // Calculate Player position X
+      const startX = 45;
+      const endX = w - 45;
+      const currentX = startX + (kasarPosition / 100) * (endX - startX);
+
+      // Draw Character Stickfigure / Avatar
+      const charY = beamY - 35;
+
+      // Head
+      kasarCtx.beginPath();
+      kasarCtx.arc(currentX, charY - 15, 10, 0, Math.PI * 2);
+      kasarCtx.fillStyle = '#10b981';
+      kasarCtx.fill();
+      kasarCtx.lineWidth = 2;
+      kasarCtx.strokeStyle = '#ffffff';
+      kasarCtx.stroke();
+
+      // Body
+      kasarCtx.beginPath();
+      kasarCtx.moveTo(currentX, charY - 5);
+      kasarCtx.lineTo(currentX, charY + 15);
+      kasarCtx.strokeStyle = '#10b981';
+      kasarCtx.lineWidth = 4;
+      kasarCtx.stroke();
+
+      // Arms (Balance position)
+      kasarCtx.beginPath();
+      kasarCtx.moveTo(currentX - 20, charY + 2);
+      kasarCtx.lineTo(currentX + 20, charY + 2);
+      kasarCtx.strokeStyle = '#10b981';
+      kasarCtx.lineWidth = 3;
+      kasarCtx.stroke();
+
+      // Legs
+      const isLeft = kasarTargetStep === 'left';
+      kasarCtx.beginPath();
+      kasarCtx.moveTo(currentX, charY + 15);
+      kasarCtx.lineTo(currentX - (isLeft ? 8 : 2), beamY);
+      kasarCtx.moveTo(currentX, charY + 15);
+      kasarCtx.lineTo(currentX + (isLeft ? 2 : 8), beamY);
+      kasarCtx.strokeStyle = '#ffffff';
+      kasarCtx.lineWidth = 3;
+      kasarCtx.stroke();
+    }
+
+    // --- CANVAS SIMULATION 2: MOTORIK HALUS (KANCING BAJU DRAG & DROP) ---
+    let halusCanvas, halusCtx;
+    let buttons = [];
+    let holes = [];
+    let draggedButton = null;
+    let completedButtons = 0;
+
+    function initHalusSim() {
+      halusCanvas = document.getElementById('halusCanvas');
+      if (!halusCanvas) return;
+      halusCtx = halusCanvas.getContext('2d');
+
+      resetHalusData();
+      attachHalusEvents();
+      drawHalus();
+    }
+
+    function resetHalusData() {
+      const w = halusCanvas.width || 300;
+      const h = halusCanvas.height || 180;
+
+      completedButtons = 0;
+      document.getElementById('halusScore').textContent = `0 / 3`;
+      document.getElementById('halusProgressBar').style.width = `0%`;
+      document.getElementById('halusFeedback').textContent = 'Geser kancing ke sasaran lubang kancing.';
+
+      holes = [
+        { x: w * 0.7, y: h * 0.25, r: 16, matched: false },
+        { x: w * 0.7, y: h * 0.50, r: 16, matched: false },
+        { x: w * 0.7, y: h * 0.75, r: 16, matched: false }
+      ];
+
+      buttons = [
+        { id: 1, x: w * 0.2, y: h * 0.25, r: 14, color: '#0284c7', matched: false },
+        { id: 2, x: w * 0.2, y: h * 0.50, r: 14, color: '#f59e0b', matched: false },
+        { id: 3, x: w * 0.2, y: h * 0.75, r: 14, color: '#ec4899', matched: false }
+      ];
+    }
+
+    function drawHalus() {
+      if (!halusCanvas || !halusCtx) return;
+      const w = halusCanvas.width;
+      const h = halusCanvas.height;
+
+      halusCtx.clearRect(0, 0, w, h);
+
+      // Background Shirt Fabric pattern
+      halusCtx.fillStyle = '#0f172a';
+      halusCtx.fillRect(0, 0, w, h);
+
+      // Shirt Seam Line
+      halusCtx.strokeStyle = '#334155';
+      halusCtx.setLineDash([5, 5]);
+      halusCtx.beginPath();
+      halusCtx.moveTo(w * 0.7, 10);
+      halusCtx.lineTo(w * 0.7, h - 10);
+      halusCtx.stroke();
+      halusCtx.setLineDash([]);
+
+      // Draw Holes
+      holes.forEach(hole => {
+        halusCtx.beginPath();
+        halusCtx.arc(hole.x, hole.y, hole.r, 0, Math.PI * 2);
+        halusCtx.fillStyle = hole.matched ? '#1e293b' : '#334155';
+        halusCtx.fill();
+        halusCtx.strokeStyle = hole.matched ? '#38bdf8' : '#64748b';
+        halusCtx.lineWidth = 2;
+        halusCtx.stroke();
+      });
+
+      // Draw Buttons
+      buttons.forEach(btn => {
+        halusCtx.beginPath();
+        halusCtx.arc(btn.x, btn.y, btn.r, 0, Math.PI * 2);
+        halusCtx.fillStyle = btn.color;
+        halusCtx.fill();
+        halusCtx.strokeStyle = '#ffffff';
+        halusCtx.lineWidth = 2;
+        halusCtx.stroke();
+
+        // Button Holes inner detail
+        halusCtx.fillStyle = '#ffffff';
+        halusCtx.beginPath();
+        halusCtx.arc(btn.x - 4, btn.y, 2, 0, Math.PI * 2);
+        halusCtx.arc(btn.x + 4, btn.y, 2, 0, Math.PI * 2);
+        halusCtx.fill();
+      });
+    }
+
+    function attachHalusEvents() {
+      const getPos = (e) => {
+        const rect = halusCanvas.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        return {
+          x: clientX - rect.left,
+          y: clientY - rect.top
+        };
+      };
+
+      const startDrag = (e) => {
+        const pos = getPos(e);
+        buttons.forEach(btn => {
+          if (!btn.matched) {
+            const dist = Math.hypot(btn.x - pos.x, btn.y - pos.y);
+            if (dist < btn.r + 5) {
+              draggedButton = btn;
+            }
+          }
+        });
+      };
+
+      const moveDrag = (e) => {
+        if (!draggedButton) return;
+        const pos = getPos(e);
+        draggedButton.x = pos.x;
+        draggedButton.y = pos.y;
+        drawHalus();
+      };
+
+      const endDrag = () => {
+        if (!draggedButton) return;
+
+        // Check collision with un-matched holes
+        holes.forEach(hole => {
+          if (!hole.matched) {
+            const dist = Math.hypot(draggedButton.x - hole.x, draggedButton.y - hole.y);
+            if (dist < hole.r + 10) {
+              // Lock into hole
+              draggedButton.x = hole.x;
+              draggedButton.y = hole.y;
+              draggedButton.matched = true;
+              hole.matched = true;
+
+              completedButtons += 1;
+              document.getElementById('halusScore').textContent = `${completedButtons} / 3`;
+              document.getElementById('halusProgressBar').style.width = `${(completedButtons / 3) * 100}%`;
+
+              if (completedButtons === 3) {
+                document.getElementById('halusFeedback').textContent = '👏 Hebat! Semua kancing baju berhasil terpasang mandiri!';
+              } else {
+                document.getElementById('halusFeedback').textContent = 'Kancing berhasil masuk! Lanjutkan kancing berikutnya.';
+              }
+            }
+          }
+        });
+
+        draggedButton = null;
+        drawHalus();
+      };
+
+      halusCanvas.addEventListener('mousedown', startDrag);
+      halusCanvas.addEventListener('mousemove', moveDrag);
+      window.addEventListener('mouseup', endDrag);
+
+      halusCanvas.addEventListener('touchstart', startDrag, { passive: true });
+      halusCanvas.addEventListener('touchmove', moveDrag, { passive: true });
+      window.addEventListener('touchend', endDrag);
+    }
+
+    function resetHalusSim() {
+      resetHalusData();
+      drawHalus();
+    }
+
+    // --- SIMULASI 3: PERABAN & TAKTIL ---
+    const taktilItems = [
+      { name: 'Kasar', label: 'Batu Ampelas / Spons Kasar', desc: 'Permukaan bertekstur tajam atau tidak rata.', icon: 'square' },
+      { name: 'Halus/Kapas', label: 'Kapas Soft / Kain Sutra', desc: 'Permukaan sangat lembut dan halus saat disentuh.', icon: 'cloud' },
+      { name: 'Lengket', label: 'Slime / Madu Sticky', desc: 'Sensasi menempel di ujung jari jemari.', icon: 'droplet' },
+      { name: 'Bergerigi', label: 'Roda Gigi / Sisir', desc: 'Sensasi gerigi berulang yang melatih kepekaan ujug jari.', icon: 'disc' }
+    ];
+
+    let currentTaktilItem = null;
+
+    function generateRandomTaktil() {
+      const idx = Math.floor(Math.random() * taktilItems.length);
+      currentTaktilItem = taktilItems[idx];
+
+      const display = document.getElementById('taktilDisplay');
+      display.innerHTML = `
+        <div class="w-16 h-16 rounded-2xl bg-amber-700 text-amber-200 border-2 border-amber-400 flex items-center justify-center mx-auto mb-2 shadow-lg animate-pulse">
+          <i data-lucide="hand" class="w-8 h-8"></i>
+        </div>
+        <p class="text-xs text-amber-100 font-bold">Benda Misteri Berada di Dalam Kotak!</p>
+        <p class="text-[11px] text-amber-300 mt-1">Raba dan tebak teksturnya di pilihan bawah.</p>
+      `;
+      document.getElementById('taktilFeedback').textContent = 'Benda baru telah dimasukkan ke kotak misteri!';
+      lucide.createIcons();
+    }
+
+    function guessTaktil(guess) {
+      if (!currentTaktilItem) {
+        document.getElementById('taktilFeedback').textContent = '⚠️ Silakan klik "Raba Benda Baru" terlebih dahulu!';
+        return;
+      }
+
+      const display = document.getElementById('taktilDisplay');
+      if (guess === currentTaktilItem.name) {
+        display.innerHTML = `
+          <div class="w-16 h-16 rounded-2xl bg-emerald-600 text-white flex items-center justify-center mx-auto mb-2 shadow-lg">
+            <i data-lucide="check-circle" class="w-8 h-8"></i>
+          </div>
+          <p class="text-xs text-emerald-200 font-bold">Tebakan Tepat: ${currentTaktilItem.label}</p>
+          <p class="text-[11px] text-emerald-100 mt-1">${currentTaktilItem.desc}</p>
+        `;
+        document.getElementById('taktilFeedback').textContent = '✨ Hebat! Kepekaan diskriminasi taktil anak sangat tajam!';
+      } else {
+        document.getElementById('taktilFeedback').textContent = `❌ Belum tepat. Coba rasakan kembali tekstur bendanya!`;
+      }
+      lucide.createIcons();
+    }
+
+    // --- CANVAS RESIZING ---
+    function resizeCanvases() {
+      const kasarContainer = document.getElementById('kasar-container');
+      if (kasarContainer && kasarCanvas) {
+        kasarCanvas.width = kasarContainer.clientWidth;
+        kasarCanvas.height = kasarContainer.clientHeight;
+        drawKasar();
+      }
+
+      const halusContainer = document.getElementById('halus-container');
+      if (halusContainer && halusCanvas) {
+        halusCanvas.width = halusContainer.clientWidth;
+        halusCanvas.height = halusContainer.clientHeight;
+        drawHalus();
+      }
+    }
+
+    // --- INIT ON LOAD ---
+    window.onload = function() {
+      lucide.createIcons();
+      renderCPCards();
+      renderChecklist();
+
+      initKasarSim();
+      initHalusSim();
+      generateRandomTaktil();
+
+      window.addEventListener('resize', resizeCanvases);
+      resizeCanvases();
+    };
+  </script>
+</body>
+</html>
